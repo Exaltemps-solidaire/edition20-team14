@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import styles from "./page.module.css";
 import { CARROUSEL_ITEMS, CHIFFRES_CLES } from "./donnees-accueil";
 import { CTAS_TESTATEUR, LIBERALITES_INTRO, LIBERALITES_ITEMS } from "./donnees-testateur";
@@ -32,6 +33,14 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <header className={styles.enTete}>
+        <Image
+          className={styles.logo}
+          src="/logo-imagine-for-margo.svg"
+          alt="Association Imagine for Margo"
+          width={147}
+          height={44}
+          priority
+        />
         <span>Vous incarnez : {utilisateurCourant.nom} — {utilisateurCourant.role}</span>
         <label>
           Qui êtes-vous ? (pour tester)

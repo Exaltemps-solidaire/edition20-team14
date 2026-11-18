@@ -1,19 +1,20 @@
 .page {
-  --background: #fafafa;
+  --background: #f0f4f7;
   --foreground: #fff;
 
-  --text-primary: #000;
-  --text-secondary: #666;
+  --text-primary: #342a7b;
+  --text-secondary: #55607a;
+  --accent-bleu: #1ea4da;
+  --accent-rose: #e24483;
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
+  --button-primary-hover: #c93570;
+  --button-secondary-hover: #e3f3fb;
+  --button-secondary-border: #d4dae0;
 
   display: flex;
   flex: 1;
   flex-direction: column;
   align-items: center;
-  font-family: var(--font-geist-sans);
   background-color: var(--background);
 }
 
@@ -27,6 +28,11 @@
   padding: 16px 24px;
   font-size: 13px;
   color: var(--text-secondary);
+}
+
+.logo {
+  height: 36px;
+  width: auto;
 }
 
 .main {
@@ -45,7 +51,7 @@
   width: 100%;
   padding: 24px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  background: color-mix(in srgb, var(--accent-bleu) 10%, white);
 }
 
 .presentation h1 {
@@ -109,8 +115,8 @@
 
 .ctas button.primary,
 .ctas a.primary {
-  background: var(--text-primary);
-  color: var(--background);
+  background: var(--accent-rose);
+  color: #fff;
   border-color: transparent;
 }
 
@@ -142,7 +148,7 @@
   gap: 4px;
   padding: 16px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  background: color-mix(in srgb, var(--accent-bleu) 10%, white);
 }
 
 .liberalites strong {
@@ -162,19 +168,5 @@
 @media (max-width: 600px) {
   .main {
     padding: 32px 24px 80px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
   }
 }

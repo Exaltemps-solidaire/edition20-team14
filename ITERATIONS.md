@@ -107,7 +107,7 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
 - **Bilan** :
   - Codage réel : moins d'1 minute (structure reprise du testateur).
   - Critères d'acceptation : les 3 sont satisfaits — 3 actions affichées, CTA de contact avec confirmation à l'écran, parcours sans aide externe (même dispatch que les autres profils).
-  - Tests unitaires : 2 nouveaux (`donnees-organisateur.test.ts`) ; 9 au total, `npm test` passe.
+  - Tests unitaires : 2 nouveaux (`donnees-organisateur.test.ts`) ; 7 au total (correction du 2026-11-18 : le bilan initial annonçait 9 par erreur), `npm test` passe.
   - Lint : `npm run lint` passe sans erreur. Build Next.js vérifié sans erreur.
   - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` ne signale aucune borne.
   - Déploiement : rebuild/push de l'image frontend seule, `podman compose up -d --force-recreate`. Vérifié depuis la machine : `localhost:8080/` → 200, `/health` → `ok`, `localhost:8081/health` → `{"status":"ok"}`.
@@ -117,8 +117,42 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
     - `frontend/src/app/donnees-organisateur.ts` + `.test.ts` : contenu réel (3 actions, CTA de contact), sourcé de `passation/cadrage/7-prd.md`.
     - `frontend/src/app/page.tsx` : `PersonaEcran` dispatche vers un nouveau `PersonaOrganisateurEcran` pour le profil organisateur (même mécanisme de confirmation à l'écran que le testateur).
 
+## Itération 4 : La charte graphique réelle d'Imagine for Margo habille l'application
+
+- **Origine** : demande du développeur en cours de hackathon (« reprend la charte graphique de https://imagineformargo.org/ »), hors du plan de livraison initial — taillée en itération ici plutôt que codée directement, conformément à la règle de `CLAUDE.md`. Temps confirmé suffisant par le développeur (« tu as le temps de faire ça »), sans minutage précis redemandé cette fois puisque la confirmation portait explicitement sur cette tâche.
+- ⚠️ Cette itération contredit la note de clôture de l'itération 2 (« pas de nouvelle itération », temps restant <10 min) : le développeur a depuis confirmé que le temps le permettait pour ce sujet précis. Signalé pour traçabilité, pas pour bloquer.
+- **Dans le périmètre** : palette de couleurs réelle du site (bleu nuit `#342a7b`, rose `#e24483`, bleu clair `#1ea4da`, extraite du HTML public de la page d'accueil) appliquée aux variables CSS existantes ; police `Source Sans 3` auto-hébergée (fichier woff2 téléchargé dans `public/fonts/`, pas de dépendance CDN au build ni à l'exécution) ; logo officiel (SVG téléchargé dans `public/`, servi depuis l'origine de l'app, pas de hotlink) affiché en en-tête.
+- **Hors périmètre** : refonte de la mise en page/structure des écrans, favicon, CTA réellement fonctionnels et pages manquantes (entreprise/particulier) — remontés par le développeur mais déjà des décisions de périmètre actées depuis l'itération 1/2 (pas de CRM, profils hors PRD), reportés en backlog sans être traités ici pour ne pas élargir cette itération.
+- **Critères d'acceptation** :
+  - Étant donné l'écran d'accueil, quand il s'affiche, alors les couleurs dominantes (texte fort, CTA primaire) reprennent la palette réelle d'Imagine for Margo au lieu des couleurs génériques du gabarit.
+  - Étant donné n'importe quel écran, quand le texte s'affiche, alors la police est `Source Sans 3`, auto-hébergée (vérifiable dans les polices chargées par la page, sans requête vers un CDN de polices).
+  - Étant donné l'en-tête, quand la page se charge, alors le logo officiel d'Imagine for Margo est visible, chargé depuis l'origine de l'application.
+- **Hypothèse de l'équipe couverte** : aucune (demande de forme, pas de fonctionnalité) — vise la cohérence visuelle avant le pitch.
+- **Codage estimé** : 8 minutes.
+- **Fichiers prévus** : `frontend/src/app/globals.css`, `frontend/src/app/layout.tsx`, `frontend/src/app/page.module.css`, `frontend/src/app/page.tsx`, `frontend/public/logo-imagine-for-margo.svg` (nouveau), `frontend/public/fonts/source-sans-3-latin.woff2` (nouveau).
+- **Tests unitaires prévus** : aucun — changement purement visuel (couleurs, police, logo), pas de logique métier, conforme à la règle « pas de test sur du balisage pur ».
+- **Étapes ajoutées à la démo** : aucune (pas de nouveau parcours, uniquement l'habillage).
+- **Bilan** :
+  - Codage réel : environ 2 minutes (dans le budget, pas d'alarme déclenchée).
+  - Critères d'acceptation : les 3 sont satisfaits — variables de couleur de `page.module.css` retargetées sur la palette réelle (`--text-primary: #342a7b`, `--accent-rose: #e24483` pour les CTA primaires, `--accent-bleu: #1ea4da` pour les fonds teintés du carrousel et des libéralités) ; police `Source Sans 3` déclarée en `@font-face` dans `globals.css` à partir du woff2 auto-hébergé, polices Geist retirées de `layout.tsx` ; logo officiel affiché en en-tête via `next/image` (export statique, `images.unoptimized: true` déjà en place).
+  - Correction incidente : la bascule automatique en thème sombre (`prefers-color-scheme: dark`) dans `globals.css` et `page.module.css` imposait des couleurs qui auraient écrasé la charte graphique pour les visiteurs en thème sombre ; supprimée pour garder une identité visuelle stable, dans les mêmes fichiers déjà touchés par cette itération.
+  - Tests unitaires : aucun nouveau (prévu, changement visuel pur) ; les 7 existants passent toujours (`npm test`).
+  - Lint : `npm run lint` passe sans erreur ni avertissement (le premier essai avec une balise `<img>` brute avait un avertissement Next.js, corrigé en passant à `next/image`).
+  - Build : `next build` (export statique) réussi ; `out/fonts/source-sans-3-latin.woff2` et `out/logo-imagine-for-margo.svg` bien présents dans l'export.
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` ne signale aucune borne.
+  - Correction de documentation : le bilan de l'itération 3 annonçait 9 tests au total par erreur ; corrigé à 7 (compte réel vérifié).
+  - Reporté : rien de prévu n'a été coupé. Le retour du développeur sur les CTA non fonctionnels et les pages manquantes reste en backlog (voir « À venir »), car hors périmètre d'une itération « charte graphique ».
+  - **Modifications** :
+    - `frontend/src/app/globals.css` : `@font-face` pour `Source Sans 3` auto-hébergée, `body` basculé sur cette police, suppression de la bascule `prefers-color-scheme: dark` qui écrasait la charte.
+    - `frontend/src/app/layout.tsx` : retrait des polices Geist (next/font/google), `lang="fr"`.
+    - `frontend/src/app/page.module.css` : variables de couleur retargetées sur la palette réelle, nouvelle classe `.logo`, teintes du carrousel/libéralités passées au bleu de la charte, suppression du bloc de thème sombre.
+    - `frontend/src/app/page.tsx` : logo ajouté en en-tête via `next/image`.
+    - `frontend/public/logo-imagine-for-margo.svg` (nouveau) : logo officiel téléchargé depuis le site public, servi en local.
+    - `frontend/public/fonts/source-sans-3-latin.woff2` (nouveau) : police officielle auto-hébergée.
+
 ## À venir (non détaillé, backlog ordonné)
 
 1. Pages persona entreprise et particulier (hors périmètre du PRD de cette version, à réévaluer si le temps le permet un autre build).
 2. Bibliothèque « voir tout » des événements et actions par persona (hors périmètre PRD).
 3. Chatbot Margo et pop-up de collecte d'email (hors périmètre PRD).
+4. ❗️ Retour du développeur (2026-11-18) : les CTA ne déclenchent pas d'action réelle (confirmation à l'écran seulement, décision de périmètre actée faute de CRM/adresse de contact dans la passation) et les pages entreprise/particulier n'existent pas encore (point 1 ci-dessus). À trancher avec les cadreurs : soit confirmer que la confirmation à l'écran suffit pour la démo, soit prioriser une vraie action (mailto, formulaire) si le temps restant le permet.
