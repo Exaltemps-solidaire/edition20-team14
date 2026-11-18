@@ -65,7 +65,7 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
   - Étant donné la page de choix de profil, quand le visiteur clique sur « Testateur », alors il voit les informations sur les libéralités et les CTA dédiés.
   - Étant donné la page persona testateur, quand il clique sur le CTA de contact, alors une action visible se déclenche (ex. lien mailto ou confirmation à l'écran).
   - Étant donné le scénario complet (accueil → choix de profil → testateur), quand on compte les clics jusqu'au CTA libéralités, alors le nombre de clics est visible/mesurable pour l'équipe (⚠️ voir note ci-dessous).
-- **Hypothèse de l'équipe couverte** : « La page persona testateur, avec ses CTA dédiés, permet à la personne qui prépare un legs de trouver l'information sur les libéralités sans aide » (mesure : nombre de clics jusqu'au CTA libéralités, cible 1 clic).
+- **Hypothèse de l'équipe couverte** : « La page persona testateur, avec ses CTA dédiés, permet à la personne qui prépare un legs de trouver l'information sur les libéralités sans aide » (mesure : nombre de clics jusqu'au CTA libéralités, cible **3 clics** — tranché par le développeur le 2026-11-18, voir note ci-dessous).
 - **Codage estimé** : 8 minutes.
 - **Fichiers prévus** : page persona testateur (contenu réel), données des CTA testateur (~3-4 fichiers).
 - **Tests unitaires prévus** : 1 à 2 tests sur la structure des CTA testateur (ex. présence des 3 CTA attendus, libellés corrects).
@@ -86,13 +86,39 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
     - `frontend/src/app/page.tsx` : `PersonaEcran` dispatche vers un nouveau `PersonaTestateurEcran` pour le profil testateur (contenu réel, 3 CTA, confirmation à l'écran, compteur de clics) ; compteur `clics` ajouté dans `Home`, incrémenté à chaque étape du parcours.
     - `frontend/src/app/page.module.css` : styles `.liberalites`, `.compteurClics`, et extension des styles `.ctas` aux liens (`a`) en plus des boutons.
 
-⚠️ L'hypothèse de l'équipe cible « 1 clic depuis la page d'accueil » jusqu'au CTA libéralités, mais le scénario validé (PRD + retours cadreurs) passe par accueil → choix de profil → persona → CTA, soit 3 clics. C'est une incohérence déjà présente dans la passation, pas introduite par le découpage : à signaler aux cadreurs plutôt qu'à corriger seul (❓).
+⚠️ L'hypothèse de l'équipe ciblait « 1 clic depuis la page d'accueil » jusqu'au CTA libéralités, mais le scénario validé (PRD + retours cadreurs) passe par accueil → choix de profil → persona → CTA, soit 3 clics. Incohérence déjà présente dans la passation, pas introduite par le découpage. **Tranché par le développeur le 2026-11-18** : la cible retenue est 3 clics, conforme au parcours réellement validé ; le compteur de clics de l'itération 2 mesure contre cette cible corrigée.
 
 ✂️ **Temps restant annoncé en clôture de l'itération 2** : moins de 10 minutes. Conformément à la règle de la section 3 de `CLAUDE.md` (« quand le temps restant ne permet plus qu'une itération, consacre-la à stabiliser ce qui sera montré au pitch »), **pas de nouvelle itération n'est planifiée** : le reste du temps sert à vérifier que la version 2 déployée est stable, pas à coder autre chose. Les points ci-dessous restent en backlog pour un prochain build.
 
+## Itération 3 : La page persona organisateur devient réelle
+
+- **Temps restant au début de l'itération 3** : 25 minutes (redemandé au début du `/iteration 3`, le 2026-11-18 — révisé de 20 à 25 par le développeur pour tenir dans la capacité minimale ≈25 min). Dernière itération tenable avant le pitch : à consacrer à la stabilisation si elle dépasse son budget.
+- **Dans le périmètre** : la page persona organisateur (remplace le stub de l'itération 1) affiche les actions possibles — je participe à un évènement, j'organise un évènement, je m'informe — et un CTA de contact, conformément au PRD (`passation/cadrage/7-prd.md`, étape 3 du plan).
+- **Hors périmètre** : inscription réelle à un évènement, formulaire de contact avec envoi réel (pas de CRM, comme pour le testateur).
+- **Critères d'acceptation** :
+  - Étant donné la page de choix de profil, quand le visiteur clique sur « Organisateur d'action solidaire », alors il voit les 3 actions possibles (participer, organiser, s'informer) et un CTA de contact.
+  - Étant donné la page persona organisateur, quand il clique sur le CTA de contact, alors une confirmation visible à l'écran se déclenche (même mécanisme que le testateur : pas d'adresse de contact dans la passation, pas de mailto inventé).
+  - Étant donné le parcours complet (accueil → choix de profil → organisateur), l'organisateur atteint sa page persona sans aide externe (pas d'étape ambiguë, pas de blocage).
+- **Hypothèse de l'équipe couverte** : « Le carrousel et les CTA de dispatch permettent à l'organisateur de trouver son point d'entrée dès la page d'accueil » (mesure : nombre d'étapes avant d'atteindre la page persona organisateur, cible 0 aide externe).
+- **Codage estimé** : 5 minutes (contenu structurellement proche du testateur, déjà en place).
+- **Fichiers prévus** : `frontend/src/app/donnees-organisateur.ts` (+ test), extension de `PersonaEcran` dans `page.tsx`.
+- **Tests unitaires prévus** : 1 à 2, sur la structure des actions/CTA organisateur.
+- **Étapes ajoutées à la démo** : après le clic sur « Organisateur d'action solidaire », vérifier l'affichage des 3 actions et du CTA de contact.
+- **Bilan** :
+  - Codage réel : moins d'1 minute (structure reprise du testateur).
+  - Critères d'acceptation : les 3 sont satisfaits — 3 actions affichées, CTA de contact avec confirmation à l'écran, parcours sans aide externe (même dispatch que les autres profils).
+  - Tests unitaires : 2 nouveaux (`donnees-organisateur.test.ts`) ; 9 au total, `npm test` passe.
+  - Lint : `npm run lint` passe sans erreur. Build Next.js vérifié sans erreur.
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` ne signale aucune borne.
+  - Déploiement : rebuild/push de l'image frontend seule, `podman compose up -d --force-recreate`. Vérifié depuis la machine : `localhost:8080/` → 200, `/health` → `ok`, `localhost:8081/health` → `{"status":"ok"}`.
+  - Signalé à PM Lab : `./scripts/signaler-version.sh 3` → version 3 enregistrée avec succès.
+  - Reporté : rien de prévu n'a été coupé.
+  - **Modifications** :
+    - `frontend/src/app/donnees-organisateur.ts` + `.test.ts` : contenu réel (3 actions, CTA de contact), sourcé de `passation/cadrage/7-prd.md`.
+    - `frontend/src/app/page.tsx` : `PersonaEcran` dispatche vers un nouveau `PersonaOrganisateurEcran` pour le profil organisateur (même mécanisme de confirmation à l'écran que le testateur).
+
 ## À venir (non détaillé, backlog ordonné)
 
-1. Page persona organisateur réelle (actions possibles : participer, organiser, s'informer ; CTA de contact) — priorité 3 de l'équipe.
-2. Pages persona entreprise et particulier (hors périmètre du PRD de cette version, à réévaluer si le temps le permet un autre build).
-3. Bibliothèque « voir tout » des événements et actions par persona (hors périmètre PRD).
-4. Chatbot Margo et pop-up de collecte d'email (hors périmètre PRD).
+1. Pages persona entreprise et particulier (hors périmètre du PRD de cette version, à réévaluer si le temps le permet un autre build).
+2. Bibliothèque « voir tout » des événements et actions par persona (hors périmètre PRD).
+3. Chatbot Margo et pop-up de collecte d'email (hors périmètre PRD).

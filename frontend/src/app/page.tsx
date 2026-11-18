@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { CARROUSEL_ITEMS, CHIFFRES_CLES } from "./donnees-accueil";
 import { CTAS_TESTATEUR, LIBERALITES_INTRO, LIBERALITES_ITEMS } from "./donnees-testateur";
+import { ACTIONS_ORGANISATEUR, CTAS_ORGANISATEUR, ORGANISATEUR_INTRO } from "./donnees-organisateur";
 import { indexSuivant } from "@/lib/carrousel";
 import { PROFILS, UTILISATEURS_EXEMPLE, trouverProfil, type ProfilId } from "@/lib/personas";
 
@@ -167,10 +168,64 @@ function PersonaEcran({
     return <PersonaTestateurEcran clics={clics} onCtaCliquee={onCtaCliquee} onRetour={onRetour} />;
   }
 
+  if (profilId === "organisateur") {
+    return <PersonaOrganisateurEcran onCtaCliquee={onCtaCliquee} onRetour={onRetour} />;
+  }
+
   return (
     <section>
       <h1>Page {profil.label}</h1>
       <p>Contenu à venir pour ce profil.</p>
+      <button type="button" onClick={onRetour}>
+        ← Retour au choix de profil
+      </button>
+    </section>
+  );
+}
+
+function PersonaOrganisateurEcran({
+  onCtaCliquee,
+  onRetour,
+}: {
+  onCtaCliquee: () => void;
+  onRetour: () => void;
+}) {
+  const [confirmation, setConfirmation] = useState<string | null>(null);
+
+  return (
+    <section>
+      <h1>Page Organisateur — monter une action solidaire</h1>
+      <p>{ORGANISATEUR_INTRO}</p>
+      <ul className={styles.liberalites}>
+        {ACTIONS_ORGANISATEUR.map((action) => (
+          <li key={action.titre}>
+            <strong>{action.titre}</strong>
+            <span>{action.texte}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className={styles.ctas}>
+        {CTAS_ORGANISATEUR.map((cta) => (
+          <button
+            key={cta.id}
+            type="button"
+            onClick={() => {
+              onCtaCliquee();
+              setConfirmation(`Votre demande (« ${cta.label} ») a été enregistrée.`);
+            }}
+          >
+            {cta.label}
+          </button>
+        ))}
+      </div>
+
+      {confirmation && (
+        <p role="status" aria-live="polite">
+          {confirmation}
+        </p>
+      )}
+
       <button type="button" onClick={onRetour}>
         ← Retour au choix de profil
       </button>
