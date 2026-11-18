@@ -88,6 +88,8 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
 
 ⚠️ L'hypothèse de l'équipe cible « 1 clic depuis la page d'accueil » jusqu'au CTA libéralités, mais le scénario validé (PRD + retours cadreurs) passe par accueil → choix de profil → persona → CTA, soit 3 clics. C'est une incohérence déjà présente dans la passation, pas introduite par le découpage : à signaler aux cadreurs plutôt qu'à corriger seul (❓).
 
+✂️ **Temps restant annoncé en clôture de l'itération 2** : moins de 10 minutes. Conformément à la règle de la section 3 de `CLAUDE.md` (« quand le temps restant ne permet plus qu'une itération, consacre-la à stabiliser ce qui sera montré au pitch »), **pas de nouvelle itération n'est planifiée** : le reste du temps sert à vérifier que la version 2 déployée est stable, pas à coder autre chose. Les points ci-dessous restent en backlog pour un prochain build.
+
 ## À venir (non détaillé, backlog ordonné)
 
 1. Page persona organisateur réelle (actions possibles : participer, organiser, s'informer ; CTA de contact) — priorité 3 de l'équipe.
