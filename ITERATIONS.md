@@ -58,6 +58,7 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
 
 ## Itération 2 : La page persona testateur devient réelle
 
+- **Temps restant au début de l'itération 2** : 30 minutes (redemandé au début du `/iteration 2`, le 2026-11-18). Capacité restante : une itération (codage ≤10 min + publication ~5 min + tour de test 10 min ≈ 25 min) — marge faible, pas de seconde itération complète à la suite sans réévaluer.
 - **Dans le périmètre** : la page persona testateur (qui remplace le stub de l'itération 1) affiche les informations sur les libéralités (legs, donations, assurances-vie) et des CTA dédiés : prise de contact, demande d'informations, téléchargement du livret legs et donations (lien, pas de formulaire).
 - **Hors périmètre** : page persona organisateur réelle (reste en stub), envoi réel d'un formulaire de contact (hors périmètre PRD : pas de CRM).
 - **Critères d'acceptation** :
@@ -69,7 +70,21 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
 - **Fichiers prévus** : page persona testateur (contenu réel), données des CTA testateur (~3-4 fichiers).
 - **Tests unitaires prévus** : 1 à 2 tests sur la structure des CTA testateur (ex. présence des 3 CTA attendus, libellés corrects).
 - **Étapes ajoutées à la démo** : après le clic sur « Testateur », vérifier l'affichage des informations libéralités et cliquer sur le CTA de contact.
-- **Bilan** : _à remplir en fin d'itération._
+- **Bilan** :
+  - Codage réel : environ 2 minutes (très en dessous du budget, pas d'alarme déclenchée).
+  - Critères d'acceptation : les 3 sont satisfaits — page testateur réelle (legs, donation, assurance-vie), CTA de contact avec confirmation visible à l'écran (pas de mailto : aucune adresse de contact n'est donnée dans la passation, donc pas inventée), et un compteur de clics affiché sur la page persona rend le nombre de clics mesurable pour l'équipe.
+  - Tests unitaires : 2 nouveaux (`donnees-testateur.test.ts` : présence des 3 CTA attendus, et répartition lien/confirmation) ; 7 au total, `npm test` passe.
+  - Lint : `npm run lint` passe sans erreur. Build Next.js (`next build`) vérifié sans erreur TypeScript.
+  - Contrat de déployabilité : `./scripts/verifier-deployabilite.sh` ne signale aucune borne.
+  - Déploiement : rebuild/push de l'image frontend seule (l'api n'a pas changé), `podman compose up -d --force-recreate`. Vérifié depuis la machine : `localhost:8080/` → 200, `/health` → `ok`, `localhost:8081/health` → `{"status":"ok"}`, et le livret statique répond 200.
+  - Signalé à PM Lab : `./scripts/signaler-version.sh 2` → version 2 enregistrée avec succès.
+  - Reporté : rien de prévu n'a été coupé.
+  - ❓ Le livret legs et donations n'existe pas dans la passation (aucun PDF fourni par l'association) : le lien de téléchargement pointe vers un fichier texte placeholder qui le dit explicitement, plutôt que d'inventer un contenu. À signaler aux cadreurs : ont-ils le vrai document à fournir ?
+  - **Modifications** :
+    - `frontend/src/app/donnees-testateur.ts` + `.test.ts` : contenu réel (libéralités : legs, donation, assurance-vie) et structure des 3 CTA testateur, sourcés de `passation/cadrage/7-prd.md` et `passation/contexte/association.md`.
+    - `frontend/public/livret-legs-et-donations.txt` : placeholder explicite pour le lien de téléchargement (document réel non fourni dans la passation).
+    - `frontend/src/app/page.tsx` : `PersonaEcran` dispatche vers un nouveau `PersonaTestateurEcran` pour le profil testateur (contenu réel, 3 CTA, confirmation à l'écran, compteur de clics) ; compteur `clics` ajouté dans `Home`, incrémenté à chaque étape du parcours.
+    - `frontend/src/app/page.module.css` : styles `.liberalites`, `.compteurClics`, et extension des styles `.ctas` aux liens (`a`) en plus des boutons.
 
 ⚠️ L'hypothèse de l'équipe cible « 1 clic depuis la page d'accueil » jusqu'au CTA libéralités, mais le scénario validé (PRD + retours cadreurs) passe par accueil → choix de profil → persona → CTA, soit 3 clics. C'est une incohérence déjà présente dans la passation, pas introduite par le découpage : à signaler aux cadreurs plutôt qu'à corriger seul (❓).
 

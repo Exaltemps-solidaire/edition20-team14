@@ -89,7 +89,8 @@
   font-size: 14px;
 }
 
-.ctas button {
+.ctas button,
+.ctas a {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,26 +100,63 @@
   border: 1px solid var(--button-secondary-border);
   background: transparent;
   color: var(--text-primary);
+  text-decoration: none;
   transition: 0.2s;
   cursor: pointer;
   font-weight: 500;
   font-family: inherit;
 }
 
-.ctas button.primary {
+.ctas button.primary,
+.ctas a.primary {
   background: var(--text-primary);
   color: var(--background);
   border-color: transparent;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .ctas button:hover {
+  .ctas button:hover,
+  .ctas a:hover {
     background: var(--button-secondary-hover);
   }
 
-  .ctas button.primary:hover {
+  .ctas button.primary:hover,
+  .ctas a.primary:hover {
     background: var(--button-primary-hover);
   }
+}
+
+.liberalites {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.liberalites li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+}
+
+.liberalites strong {
+  color: var(--text-primary);
+}
+
+.liberalites span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.compteurClics {
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 600px) {

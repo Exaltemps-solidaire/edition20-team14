@@ -1,0 +1,6 @@
+Livret legs et donations — Imagine for Margo
+
+Ce fichier est un espace réservé : l'association n'a pas encore fourni le
+livret réel (PDF) au moment de ce build. Le lien et son libellé sont
+conformes au scénario validé ; le contenu définitif remplacera ce fichier
+dès qu'il sera transmis par l'association.
