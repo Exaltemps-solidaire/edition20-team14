@@ -162,9 +162,13 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
   - `frontend/nginx.conf` : ajout de `script-src 'self' 'unsafe-inline'` à la CSP.
   - `adr.md` : entrée documentant la décision et le compromis de sécurité (XSS accepté en l'absence de contenu utilisateur réinjecté).
 
+✂️ **Temps restant annoncé après le retour du développeur (2026-11-18)** : 3 minutes — sous la capacité minimale d'une itération (codage + publication + tour de test ≈ 25 min). Conformément à la règle de `CLAUDE.md` (« quand le temps restant ne permet plus qu'une itération, consacre-la à stabiliser »), **aucune des itérations 6 à 9 n'est codée maintenant**. État vérifié stable avant arrêt : `localhost:8080/`, `/health` et `localhost:8081/health` répondent tous 200, arbre git propre (rien en attente). La version 5 (CSP corrigée, interactivité rétablie) reste donc la version présentée au pitch.
+
 ## À venir (non détaillé, backlog ordonné)
 
-1. Pages persona entreprise et particulier (hors périmètre du PRD de cette version, à réévaluer si le temps le permet un autre build).
-2. Bibliothèque « voir tout » des événements et actions par persona (hors périmètre PRD).
-3. Chatbot Margo et pop-up de collecte d'email (hors périmètre PRD).
-4. ❗️ Retour du développeur (2026-11-18) : les CTA ne déclenchent pas d'action réelle (confirmation à l'écran seulement, décision de périmètre actée faute de CRM/adresse de contact dans la passation) et les pages entreprise/particulier n'existent pas encore (point 1 ci-dessus). À trancher avec les cadreurs : soit confirmer que la confirmation à l'écran suffit pour la démo, soit prioriser une vraie action (mailto, formulaire) si le temps restant le permet.
+1. **Itération 6** : le CTA « Voir plus » mène à une rubrique fictive d'exemples d'évènements (nouvelle page), au lieu du choix de profil.
+2. **Itération 7** : page persona entreprise réelle — 3 encarts fictifs (organiser un évènement en entreprise, devenir mécène, date de fondation).
+3. **Itération 8** : page persona particulier réelle — ❓ contenu non précisé par le développeur ni par la passation (hors PRD) ; à défaut de retour des cadreurs, structure similaire au testateur/organisateur (encarts fictifs + CTA de contact), à valider avant de coder.
+4. **Itération 9** : le CTA « Je veux agir » mène à son propre contenu, distinct de « Je veux m'engager » — ❓ destination non précisée par le développeur, à clarifier avant de coder.
+5. Chatbot Margo et pop-up de collecte d'email (hors périmètre PRD).
+6. ❗️ Retour du développeur (2026-11-18) : les CTA ne déclenchent pas d'action réelle (confirmation à l'écran seulement, décision de périmètre actée faute de CRM/adresse de contact dans la passation). À trancher avec les cadreurs : soit confirmer que la confirmation à l'écran suffit pour la démo, soit prioriser une vraie action (mailto, formulaire) si un prochain build le permet.
