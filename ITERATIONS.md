@@ -150,6 +150,18 @@ Sortent du périmètre, à reporter à un prochain build (renseigné dans « À 
     - `frontend/public/logo-imagine-for-margo.svg` (nouveau) : logo officiel téléchargé depuis le site public, servi en local.
     - `frontend/public/fonts/source-sans-3-latin.woff2` (nouveau) : police officielle auto-hébergée.
 
+## Itération 5 : correctif — la CSP empêchait toute interactivité (CTA, carrousel, sélecteur)
+
+- **Origine** : retour du développeur après démo (« les CTA ne fonctionnent pas »), répété une seconde fois pour insister. Pas une demande de fonctionnalité : un bug bloquant sur ce qui était présenté comme acquis depuis l'itération 1.
+- ❗️ **Cause réelle trouvée** : `frontend/nginx.conf` servait une CSP avec `default-src 'self'` mais sans `script-src` explicite. L'export statique de Next.js embarque son payload d'hydratation dans des `<script>` inline sans nonce — bloqués par cette CSP dans tout navigateur qui l'applique. Résultat : le HTML s'affiche (d'où les `curl` à 200 dans tous les bilans précédents), mais React n'hydrate jamais, donc **aucun** `onClick` ne répond : ni les CTA de contact/téléchargement, ni le carrousel, ni le sélecteur de persona. Ce n'était donc pas spécifique aux CTA testateur/organisateur signalés : c'était toute l'interactivité de l'application, cassée depuis le premier déploiement, et jamais détectée parce que la vérification en ligne de chaque itération s'est limitée à des `curl` (voir ADR du 2026-11-18 pour le détail et le compromis de sécurité accepté).
+- **Correctif** : `script-src 'self' 'unsafe-inline'` ajouté explicitement à la CSP. Rebuild/push/redeploy de l'image frontend seule.
+- **Codage réel** : moins d'1 minute (une ligne de configuration nginx).
+- **Vérifié** : `curl -D -` confirme l'en-tête `Content-Security-Policy` mis à jour en ligne ; `./scripts/verifier-deployabilite.sh` ne signale aucune borne. **Non vérifié depuis cette machine** : le clic réel dans un navigateur, puisque la machine ne peut pas exécuter de navigateur ni joindre `$URL_PUBLIQUE` elle-même — ❓ à confirmer par le développeur dans son navigateur avant de considérer le correctif acquis.
+- **Signalé à PM Lab** : `./scripts/signaler-version.sh 5`.
+- **Modifications** :
+  - `frontend/nginx.conf` : ajout de `script-src 'self' 'unsafe-inline'` à la CSP.
+  - `adr.md` : entrée documentant la décision et le compromis de sécurité (XSS accepté en l'absence de contenu utilisateur réinjecté).
+
 ## À venir (non détaillé, backlog ordonné)
 
 1. Pages persona entreprise et particulier (hors périmètre du PRD de cette version, à réévaluer si le temps le permet un autre build).
